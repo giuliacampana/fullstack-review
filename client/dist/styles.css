@@ -1,0 +1,28 @@
+#main-title {
+  text-align: center;
+}
+
+#btn {
+  margin: 8px;
+}
+
+#repo-title {
+  text-align: center;
+  margin-top: 50px;
+}
+
+table {
+  display: block;
+  margin: 0 auto;
+}
+tr {
+  text-align: center;
+}
+
+th {
+  width: 300px;
+}
+
+td {
+  width: 300px;
+}

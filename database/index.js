@@ -3,46 +3,64 @@ mongoose.connect('mongodb://localhost/fetcher');
 
 let repoSchema = mongoose.Schema({
   id: Number,
-  name: String,
+  name: {type: String, unique: false, dropDups: true},
   user: String,
   html_url: String,
-  description: String,
   stargazers: Number
 });
 
 let Repo = mongoose.model('Repo', repoSchema);
 
 let saveRepo = (arrayfromGithub, callback) => {
-  	for (var i = 0; i < arrayfromGithub.length; i++) {
-  	const repo = new Repo({
-  						  id: { 
-  						  	    type: String,
-  						  	    index: true,
-  						  	    unique: true
-  						  	  },
-  						  name: arrayfromGithub[i].name,
-  						  user: arrayfromGithub[i].owner.login,
-  						  html_url: arrayfromGithub[i].html_url,
-  						  description: arrayfromGithub[i].description,
-  						  stargazers: arrayfromGithub[i].stargazers_count
-  						});
+	console.log('arrayfromGithub: ', arrayfromGithub);
+	console.log('callback: ', callback);
 
-  	repo.save((err, results) => {
-  	  if (err) {
-  	  	callback(err, null);
-  	  } else {
-  	  	callback(null, results);
-  	  }
-  	});
-  }  
+	arrayfromGithub = JSON.parse(arrayfromGithub);
+
+	var reposToSave = arrayfromGithub.map((repo) => {
+	  return {
+	  	name: repo.name,
+	  	user: repo.owner.login,
+	  	html_url: repo.html_url,
+	  	stargazers: repo.stargazers_count
+	  }
+	});
+
+	Repo.insertMany(reposToSave, callback);
+
+  	// for (var i = 0; i < arrayfromGithub.length; i++) {
+  	//   const repo = new Repo({
+  	// 					  name: arrayfromGithub[i].name,
+  	// 					  user: arrayfromGithub[i].owner.login,
+  	// 					  html_url: arrayfromGithub[i].html_url,
+  	// 					  stargazers: arrayfromGithub[i].stargazers_count
+  	// 					  });
+
+  	//   repo.save((err, results) => {
+   //      console.log('DATABASE SAVE REPO callback is run');
+
+  	//     if (err) {
+  	//       console.log('DATA WAS NOT SAVED IN THE DATABASE');
+  	//   	  callback(err, null);
+  	//     } else {
+  	//       console.log('DATA WAS SAVED IN THE DATABASE');
+  	//   	  callback(null, results);
+  	//     }
+  	//   });
+   // }  
 }
 
 let findReposByStargazers = (callback) => {
-  Repo.find((err) => {
-  	if (err) { 
-  	  console.log(err); 
-  	}
-  }).limit(25).sort({ stargazers: -1 }).exec(callback);
+  Repo.find()
+  .sort({ stargazers: 'desc' })
+  .limit(25)
+  .exec(function(err, results) {
+  	if (err) {
+  	  callback(err, null);
+  	} else {
+  	  callback(null, results);
+    };
+  });
 }
 
 let findReposByUsername = (username, callback) => {

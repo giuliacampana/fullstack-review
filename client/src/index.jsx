@@ -10,35 +10,43 @@ class App extends React.Component {
     this.state = { 
       repos: []
     }
-
   }
 
   search (query) {
     console.log(`${query} was searched`);
+    console.log(typeof query);
+
+    const data = JSON.stringify({username: query});
 
     $.ajax({
       url: '/repos',
       type: 'POST',
-      data: JSON.stringify({username: query}),
-      contentType: 'application/json',
+      data: data,
+      headers: {
+        "Content-Type": "application/json"
+      },
+      // dataType: 'json',
       success: (data) => {
-        console.log('AJAX repos were found and added to the database!');
+        console.log('AJAX SUCCESS repos were found and added to the database!');
       },
       error: (error) => {
-        console.error('AJAX post failed: ', error);
+        console.error('AJAX FAIL post failed: ', error);
       }
     });
   }
 
-  displayRepos() {
+  getStarredRepos() {
     $.ajax({
       url: '/repos',
       type: 'GET',
       success: (data) => {
+        console.log(data);
+        console.log(typeof data);
+        // var jsonArray = JSON.parse(data);
         this.setState({
-          repos: JSON.parse(data)
+          repos: data
         });
-        console.log('AJAX repos retrieved!')
+        console.log('AJAX repos retrieved!');
       },
       error: (err) => {
         console.error('AJAX post failed: ', err);
@@ -47,12 +55,12 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.displayRepos();
+    this.getStarredRepos();
   }
 
   render () {
     return (<div>
-      <h1>Github Fetcher</h1>
+      <h1 id="main-title">Github Fetcher</h1>
       <Search onSearch={this.search.bind(this)}/>
       <RepoList repos={this.state.repos}/>
     </div>)

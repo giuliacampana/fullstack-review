@@ -8,25 +8,30 @@ app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.json());
 
 app.post('/repos', function (req, res) {
-  // TODO - your code here!
-  // This route should take the github username provided
-  // and get the repo information from the github API, then
-  // save the repo information in the database
 
-  // check if req.body is just the username!!
-  console.log('POST REQUEST DATA------------', req.body);
-  res.send(req.body);
+  console.log('-------------------------DATA COMING INTO SERVER ON POST', req.body);
 
   github.getReposByUsername(req.body.username, function(err, data) {
   	if (err) {
-  	  console.log(err);
+  	  console.log('ERROR FETCHING DATA FROM GITHUB API ', err);
+  	  res.end(err);
+
   	} else {
-  	  // pass data to database
-  	  db.saveRepo(data, function(err, results) {
+  	  console.log('API CALL SUCCESSFUL: data found from Github API');
+
+  	  // console.log('----------DATA FROM API-------------', data);
+  	  // console.log('----------DATA.BODY FROM API-------------', data.body);
+
+  	  db.saveRepo(data.body, function(err, results) {
+
+  	  	console.log('SERVER calbback after saving repo in database called');
+
   	  	if (err) {
-  	  	  res.status(500).send();
+  	  	  res.end(err);
+
   	  	} else {
-  	  	  res.status(201).send('SERVER repos stored!');
+  	  	  console.log('results: ', results);
+  	  	  res.send('SERVER repos stored and response sent to client!');
   	  	}
   	  });
   	}
@@ -41,11 +46,13 @@ app.get('/repos', function (req, res) {
   // findRepo passes data as an array of repo object into the callback
   // callback sends data back to client
 
-  db.findReposByStargazers((err, results) => {
+  db.findReposByStargazers(function(err, results) {
   	if (err) {
   	  console.log(err);
   	} else {
-  	  res.json(200, results);
+  	  // console.log(results);
+  	  // console.log(typeof results);
+  	  res.send(results); //JSON.stringify(results)
   	}
   })
 });

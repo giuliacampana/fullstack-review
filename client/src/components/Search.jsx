@@ -14,7 +14,9 @@ class Search extends React.Component {
     });
   }
 
-  search() {
+  search(event) {
+    console.log('show query: ', this.state.query);
+    event.preventDefault();
     this.props.onSearch(this.state.query);
   }
 
@@ -22,7 +24,7 @@ class Search extends React.Component {
     return (<div>
       <h4>Add more repos!</h4>
       Enter a github username: <input value={this.state.query} onChange={this.onChange.bind(this)}/>       
-      <button onClick={this.search.bind(this)}> Add Repos </button>
+      <button id="btn" onClick={this.search.bind(this)}> Add Repos </button>
     </div>) 
   }
 }
