@@ -12,21 +12,26 @@ let repoSchema = mongoose.Schema({
 
 let Repo = mongoose.model('Repo', repoSchema);
 
-let saveRepo = (arrayfromGithub) => {
-  const parsedArray = JSON.parse(arrayfromGithub);
-
-  for (var i = 0; i < parsedArray.length; i++) {
+let saveRepo = (arrayfromGithub, callback) => {
+  	for (var i = 0; i < arrayfromGithub.length; i++) {
   	const repo = new Repo({
-  						  id: parsedArray[i].id,
-  						  name: parsedArray[i].name,
-  						  user: parsedArray[i].owner.login,
-  						  html_url: parsedArray[i].html_url,
-  						  description: parsedArray[i].description,
-  						  stargazers: parsedArray[i].stargazers_count
+  						  id: { 
+  						  	    type: String,
+  						  	    index: true,
+  						  	    unique: true
+  						  	  },
+  						  name: arrayfromGithub[i].name,
+  						  user: arrayfromGithub[i].owner.login,
+  						  html_url: arrayfromGithub[i].html_url,
+  						  description: arrayfromGithub[i].description,
+  						  stargazers: arrayfromGithub[i].stargazers_count
   						});
-  	repo.save((err) => {
+
+  	repo.save((err, results) => {
   	  if (err) {
-  	  	console.log(err);
+  	  	callback(err, null);
+  	  } else {
+  	  	callback(null, results);
   	  }
   	});
   }  

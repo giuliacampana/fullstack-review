@@ -13,17 +13,22 @@ app.post('/repos', function (req, res) {
   // and get the repo information from the github API, then
   // save the repo information in the database
 
-  // req.body is the username we're looking for
-  // first, query the database for the username to see if we already have repos
-  db.findReposByUsername(req.body, (err, results) => {
-  	if (err) {
-      // send GET request to API
-      request('API', (error, response, body) => {
+  // check if req.body is just the username!!
+  console.log('POST REQUEST DATA------------', req.body);
+  res.send(req.body);
 
-      })
+  github.getReposByUsername(req.body.username, function(err, data) {
+  	if (err) {
+  	  console.log(err);
   	} else {
-      // do nothing
-      res.status(201).end('username already in database -- nothing to post');
+  	  // pass data to database
+  	  db.saveRepo(data, function(err, results) {
+  	  	if (err) {
+  	  	  res.status(500).send();
+  	  	} else {
+  	  	  res.status(201).send('SERVER repos stored!');
+  	  	}
+  	  });
   	}
   });
 });
