@@ -27,27 +27,6 @@ let saveRepo = (arrayfromGithub, callback) => {
 	});
 
 	Repo.insertMany(reposToSave, callback);
-
-  	// for (var i = 0; i < arrayfromGithub.length; i++) {
-  	//   const repo = new Repo({
-  	// 					  name: arrayfromGithub[i].name,
-  	// 					  user: arrayfromGithub[i].owner.login,
-  	// 					  html_url: arrayfromGithub[i].html_url,
-  	// 					  stargazers: arrayfromGithub[i].stargazers_count
-  	// 					  });
-
-  	//   repo.save((err, results) => {
-   //      console.log('DATABASE SAVE REPO callback is run');
-
-  	//     if (err) {
-  	//       console.log('DATA WAS NOT SAVED IN THE DATABASE');
-  	//   	  callback(err, null);
-  	//     } else {
-  	//       console.log('DATA WAS SAVED IN THE DATABASE');
-  	//   	  callback(null, results);
-  	//     }
-  	//   });
-   // }  
 }
 
 let findReposByStargazers = (callback) => {
@@ -63,19 +42,9 @@ let findReposByStargazers = (callback) => {
   });
 }
 
-let findReposByUsername = (username, callback) => {
-  Repo.find({ user: username }, (err, results) => {
-  	if (err) { 
-  	  callback(err, null); 
-  	} else {
-  	  callback(null, results); 
-  	}
-  });
-}
 
 module.exports.saveRepo = saveRepo;
 module.exports.findReposByStargazers = findReposByStargazers;
-module.exports.findReposByUsername = findReposByUsername;
 
 
 

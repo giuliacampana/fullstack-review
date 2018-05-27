@@ -25,7 +25,6 @@ class App extends React.Component {
       headers: {
         "Content-Type": "application/json"
       },
-      // dataType: 'json',
       success: (data) => {
         console.log('AJAX SUCCESS repos were found and added to the database!');
       },

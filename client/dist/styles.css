@@ -1,28 +1,53 @@
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
 #main-title {
   text-align: center;
+  letter-spacing: 4px;
+  font-size: 20px;
 }
 
 #btn {
   margin: 8px;
+  padding: 5px;
+  font-family: 'Poppins', sans-serif;
 }
 
 #repo-title {
   text-align: center;
-  margin-top: 50px;
+  letter-spacing: 2px;
+  margin-top: 25px;
 }
 
 table {
   display: block;
   margin: 0 auto;
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
 }
+
 tr {
   text-align: center;
 }
 
+#repo-columns:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
 th {
   width: 300px;
+  border: 1px solid #ddd;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  background-color: #5252eb;
+  color: white;
+  letter-spacing: 2px;
 }
 
 td {
   width: 300px;
+  border: 1px solid #ddd;
+  padding: 8px;
 }

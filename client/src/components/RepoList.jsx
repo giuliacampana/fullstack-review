@@ -3,7 +3,7 @@ import React from 'react';
 
 const RepoList = (props) => (
   <div>
-    <h2 id="repo-title">Repos with the Most Stargazers</h2>
+    <h2 id="repo-title">Repos By Stargazers</h2>
     <table className="repoList">
       <thead>
       	<tr id="header-columns">

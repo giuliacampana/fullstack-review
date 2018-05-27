@@ -9,28 +9,19 @@ app.use(bodyParser.json());
 
 app.post('/repos', function (req, res) {
 
-  console.log('-------------------------DATA COMING INTO SERVER ON POST', req.body);
-
   github.getReposByUsername(req.body.username, function(err, data) {
   	if (err) {
-  	  console.log('ERROR FETCHING DATA FROM GITHUB API ', err);
   	  res.end(err);
 
   	} else {
   	  console.log('API CALL SUCCESSFUL: data found from Github API');
 
-  	  // console.log('----------DATA FROM API-------------', data);
-  	  // console.log('----------DATA.BODY FROM API-------------', data.body);
-
   	  db.saveRepo(data.body, function(err, results) {
-
-  	  	console.log('SERVER calbback after saving repo in database called');
 
   	  	if (err) {
   	  	  res.end(err);
 
   	  	} else {
-  	  	  console.log('results: ', results);
   	  	  res.send('SERVER repos stored and response sent to client!');
   	  	}
   	  });
@@ -50,9 +41,7 @@ app.get('/repos', function (req, res) {
   	if (err) {
   	  console.log(err);
   	} else {
-  	  // console.log(results);
-  	  // console.log(typeof results);
-  	  res.send(results); //JSON.stringify(results)
+  	  res.send(results);
   	}
   })
 });
